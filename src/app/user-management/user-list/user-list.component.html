@@ -1,0 +1,100 @@
+<div class="container-fluid">
+  <h2 class="mb-4">Gerenciamento de Usuários</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-end">
+      <button class="btn btn-primary" routerLink="new">
+        <i class="bi bi-plus-circle me-2"></i>
+        Novo Usuário
+      </button>
+    </div>
+    <div class="card-body">
+      <div *ngIf="usersPage$ | async as page" class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nome Completo</th>
+              <th scope="col">Usuário</th>
+              <th scope="col">Status</th>
+              <th scope="col">Permissões</th>
+              <th scope="col" class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of page.content">
+              <td>{{ user.usuarioId }}</td>
+              <td>{{ user.nomeCompleto }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="badge" [ngClass]="user.ativo ? 'bg-success' : 'bg-warning'">
+                  {{ user.ativo ? 'Ativo' : 'Inativo' }}
+                </span>
+              </td>
+              <td>
+                <span *ngFor="let role of user.roles" class="me-1" [ngClass]="getRoleClass(role)">
+                  {{ role.replace('ROLE_', '') }}
+                </span>
+              </td>
+              <td class="text-end">
+                <div ngbDropdown container="body" class="d-inline-block">
+                  <button type="button" class="btn btn-sm actions-dropdown-toggle" ngbDropdownToggle>
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <div ngbDropdownMenu>
+                    <button ngbDropdownItem [routerLink]="['edit', user.usuarioId]">
+                      <i class="bi bi-pencil me-2"></i>Editar
+                    </button>
+                    <button ngbDropdownItem (click)="openDeactivationModal(deactivateModal, user)" [disabled]="!user.ativo">
+                      <i class="bi bi-person-x me-2"></i>Desativar
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between p-2" *ngIf="page.totalElements > 0">
+          <ngb-pagination 
+            [collectionSize]="page.totalElements" 
+            [(page)]="currentPage" 
+            [pageSize]="pageSize" 
+            (pageChange)="onPageChange($event)">
+          </ngb-pagination>
+          <span class="align-self-center text-muted">
+            Total de usuários: {{ page.totalElements }}
+          </span>
+        </div>
+
+        <div *ngIf="page.totalElements === 0" class="text-center p-4">
+          <p>Nenhum usuário encontrado.</p>
+        </div>
+
+      </div>
+
+      <div *ngIf="!(usersPage$ | async)" class="text-center p-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Carregando...</span>
+                </div>
+        
+              </div>
+        
+            </div>
+          </div>
+        </div>
+        
+        <ng-template #deactivateModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-title">Confirmar Desativação</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Tem certeza que deseja desativar o usuário <span class="text-primary">{{ userToDeactivate?.email }}</span>?</strong></p>
+            <p class="text-muted"><small>Esta ação pode ser revertida na tela de edição do usuário.</small></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('confirm')">Confirmar</button>
+          </div>
+        </ng-template>

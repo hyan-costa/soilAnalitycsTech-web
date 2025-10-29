@@ -1,0 +1,60 @@
+<div class="container-fluid">
+  <h2 class="mb-4">Editar Usuário</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body" *ngIf="userForm">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <!-- Campo Username (Read-only) -->
+        <div class="mb-3">
+          <label for="username" class="form-label">Login (não pode ser alterado)</label>
+          <input type="text" id="username" class="form-control" formControlName="username">
+        </div>
+
+        <!-- Campo Nome Completo -->
+        <div class="mb-3">
+          <label for="nomeCompleto" class="form-label">Nome Completo</label>
+          <input type="text" id="nomeCompleto" class="form-control" formControlName="nomeCompleto">
+        </div>
+
+        <!-- Campo Password -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Nova Senha</label>
+          <input type="password" id="password" class="form-control" formControlName="password" placeholder="Deixe em branco para não alterar">
+        </div>
+
+        <!-- Campo Roles -->
+        <div class="mb-3">
+          <label for="roles" class="form-label">Permissões</label>
+          <select id="roles" class="form-select" multiple formControlName="roles">
+            <option *ngFor="let role of (roles$ | async)" [value]="role.name">{{ role.name.replace('ROLE_', '') }}</option>
+          </select>
+        </div>
+
+        <!-- Campo Enabled -->
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" id="enabled" formControlName="enabled">
+          <label class="form-check-label" for="enabled">Usuário Ativo</label>
+        </div>
+
+        <!-- Alerta de Erro -->
+        <div *ngIf="error" class="alert alert-danger mt-3">
+          {{ error }}
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="d-flex justify-content-end mt-4">
+          <button type="button" class="btn btn-secondary me-2" routerLink="/users">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ isLoading ? 'Salvando...' : 'Salvar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="!userForm" class="text-center p-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+      </div>
+  </div>
+</div>

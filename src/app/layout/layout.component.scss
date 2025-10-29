@@ -1,0 +1,99 @@
+@use 'sass:color';
+
+// Import bootstrap icons
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css");
+
+// --- Variáveis ---
+$navbar-height: 58px;
+$sidebar-width-expanded: 280px;
+$sidebar-width-collapsed: 90px;
+$sidebar-bg: #2c3e50;
+$sidebar-link-color: #bdc3c7;
+$sidebar-link-hover-color: #ffffff;
+$sidebar-link-active-color: #ffffff;
+$sidebar-link-active-bg: #34495e;
+$main-content-bg: #ecf0f1;
+$transition-speed: 0.25s;
+
+// --- Estrutura Principal ---
+.navbar {
+  height: $navbar-height;
+  background-color: $sidebar-bg;
+  z-index: 1020;
+
+  .navbar-toggler {
+    border: none;
+    i {
+      color: white;
+      font-size: 1.75rem;
+    }
+  }
+}
+
+.main-container {
+  display: flex;
+  height: calc(100vh - #{$navbar-height});
+}
+
+// --- Sidebar ---
+.sidebar {
+  width: $sidebar-width-collapsed; // Começa recolhido
+  background-color: $sidebar-bg;
+  color: white;
+  transition: width $transition-speed ease-in-out;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+
+  .nav-link {
+    color: $sidebar-link-color;
+    padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+
+    i {
+      font-size: 1.75rem;
+    }
+
+    .nav-link-text {
+      display: none;
+      margin-left: 1rem;
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      color: $sidebar-link-hover-color;
+      background-color: color.adjust($sidebar-bg, $lightness: 5%);
+    }
+
+    &.active {
+      color: $sidebar-link-active-color;
+      background-color: $sidebar-link-active-bg;
+      font-weight: 500;
+    }
+  }
+
+  // --- Estado Expandido ---
+  &.expanded {
+    width: $sidebar-width-expanded;
+
+    .nav-link {
+      justify-content: flex-start;
+      padding-left: 2.25rem;
+      .nav-link-text {
+        display: inline;
+      }
+    }
+  }
+}
+
+// --- Conteúdo Principal ---
+.main-content {
+  flex-grow: 1; // Ocupa o espaço restante
+  height: 100%;
+  overflow-y: auto;
+  background-color: $main-content-bg;
+}

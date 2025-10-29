@@ -1,0 +1,23 @@
+.actions-dropdown-toggle {
+  background-color: transparent;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  color: #6c757d; // Cor de texto secundária do Bootstrap
+
+  // Remove a seta padrão do dropdown do Bootstrap
+  &::after {
+    display: none;
+  }
+
+  // Efeito suave ao passar o mouse ou focar
+  &:hover, &:focus, &.show {
+    background-color: #e9ecef; // Cinza claro
+    color: #212529; // Texto escuro
+  }
+}
+
+// Garante que os ícones dentro do menu fiquem alinhados
+.dropdown-item i {
+  width: 20px;
+  text-align: center;
+}

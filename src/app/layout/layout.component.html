@@ -1,0 +1,42 @@
+<!-- 1. Navbar no topo da página -->
+<nav class="navbar navbar-dark shadow-sm">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <button class="navbar-toggler" type="button" (click)="toggleSidebar()" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+      <a class="navbar-brand ms-2 d-none d-md-block" href="#">Soil Analitycs</a>
+    </div>
+    <div class="d-flex align-items-center">
+      <span class="navbar-text me-3 d-none d-lg-block" *ngIf="currentUser">
+        Bem-vindo, {{ currentUser.fullName }}
+      </span>
+      <button class="btn btn-outline-light d-flex align-items-center" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        <span class="d-none d-sm-inline ms-2">Sair</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- 2. Container principal para o conteúdo abaixo da navbar -->
+<div class="main-container">
+  <!-- 2a. Sidebar -->
+  <div class="sidebar" [class.expanded]="isSidebarExpanded">
+    <ul class="nav flex-column">
+      <li class="nav-item" *ngIf="isAdmin">
+        <a class="nav-link" routerLink="/users" routerLinkActive="active">
+          <i class="bi bi-people"></i>
+          <span class="nav-link-text">Gerenciar Usuários</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 2b. Conteúdo Principal -->
+  <div class="main-content">
+    <main class="p-4">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
