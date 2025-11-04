@@ -15,12 +15,20 @@ function decodeToken(token: string): any {
 }
 
 export interface UserPayload {
-  sub: string; // login
+  sub: string; // email
   roles: string[];
-  login: string;
-  fullName: string;
   iat: number;
   exp: number;
+}
+
+export interface LoginResponse {
+  token: string;
+  type: string;
+  username: string; // email
+  nomeCompleto: string;
+  usuarioId: string;
+  roles: string[];
+  permissoes: string[];
 }
 
 @Injectable({
@@ -28,7 +36,7 @@ export interface UserPayload {
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080';
+  private apiUrl = 'http://localhost:8080/soilanalitycs/api';
   private tokenKey = 'authToken';
 
   private currentUserSubject: BehaviorSubject<UserPayload | null>;
@@ -45,14 +53,16 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(credentials: {login: string, password: string}): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/api/auth/login`, credentials).pipe(
+  login(credentials: {login: string, password: string}): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
         if (response && response.token) {
           localStorage.setItem(this.tokenKey, response.token);
-          localStorage.setItem('login', response.username);
-          localStorage.setItem('fullName', response.nomeCompleto);
+          localStorage.setItem('usuarioId', response.usuarioId);
+          localStorage.setItem('email', response.username);
+          localStorage.setItem('nomeCompleto', response.nomeCompleto);
           localStorage.setItem('roles', JSON.stringify(response.roles));
+          localStorage.setItem('permissoes', JSON.stringify(response.permissoes));
           const user = decodeToken(response.token);
           this.currentUserSubject.next(user);
         }
@@ -62,6 +72,11 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('usuarioId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('nomeCompleto');
+    localStorage.removeItem('roles');
+    localStorage.removeItem('permissoes');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
@@ -75,6 +90,34 @@ export class AuthService {
   }
 
   hasRole(role: string): boolean {
-    return this.currentUserValue?.roles?.includes(role) ?? false;
+    const roles = this.getRoles();
+    return roles.includes(role);
+  }
+
+  hasPermission(permission: string): boolean {
+    const permissoes = this.getPermissions();
+    return permissoes.includes(permission);
+  }
+
+  getRoles(): string[] {
+    const rolesStr = localStorage.getItem('roles');
+    return rolesStr ? JSON.parse(rolesStr) : [];
+  }
+
+  getPermissions(): string[] {
+    const permissoesStr = localStorage.getItem('permissoes');
+    return permissoesStr ? JSON.parse(permissoesStr) : [];
+  }
+
+  getUsuarioId(): string | null {
+    return localStorage.getItem('usuarioId');
+  }
+
+  getEmail(): string | null {
+    return localStorage.getItem('email');
+  }
+
+  getNomeCompleto(): string | null {
+    return localStorage.getItem('nomeCompleto');
   }
 }

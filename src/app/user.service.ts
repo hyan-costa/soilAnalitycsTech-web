@@ -3,9 +3,33 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // Interfaces para tipar os dados da API
-export interface Role {
-  id: number;
-  name: string;
+export interface Perfil {
+  perfilId: string;
+  nome: string;
+  descricao: string;
+  ativo: boolean;
+  laboratorioId?: string;
+  laboratorioNome?: string;
+}
+
+export interface Laboratorio {
+  laboratorioId: string;
+  nome: string;
+  cnpj: string;
+  telefone: string;
+  email: string;
+  ativo: boolean;
+}
+
+export interface Cliente {
+  clienteId: string;
+  nome: string;
+  cpfCnpj: string;
+  email: string;
+  telefone: string;
+  ativo: boolean;
+  laboratorioId: string;
+  laboratorioNome: string;
 }
 
 export interface User {
@@ -13,7 +37,12 @@ export interface User {
   email: string;
   nomeCompleto: string;
   ativo: boolean;
-  roles: string[]; // Assumindo que o backend vai popular isso ou que será derivado do perfil
+  perfilId: string;
+  perfilNome: string;
+  laboratorioId?: string;
+  laboratorioNome?: string;
+  clienteId?: string;
+  clienteNome?: string;
 }
 
 export interface Page<T> {
@@ -29,7 +58,7 @@ export interface Page<T> {
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8080/api/v1';
+  private apiUrl = 'http://localhost:8080/soilanalitycs/api/v1';
 
   constructor(private http: HttpClient) { }
 
@@ -54,8 +83,16 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}/usuarios/${id}`);
   }
 
-  getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${this.apiUrl}/roles`);
+  getPerfis(): Observable<Perfil[]> {
+    return this.http.get<Perfil[]>(`${this.apiUrl}/perfis`);
+  }
+
+  getLaboratorios(): Observable<Laboratorio[]> {
+    return this.http.get<Laboratorio[]>(`${this.apiUrl}/laboratorios`);
+  }
+
+  getClientes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(`${this.apiUrl}/clientes`);
   }
 
   createUser(user: Partial<User>): Observable<User> {

@@ -15,9 +15,9 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Nome Completo</th>
-              <th scope="col">Usuário</th>
+              <th scope="col">Email</th>
+              <th scope="col">Perfil</th>
               <th scope="col">Status</th>
-              <th scope="col">Permissões</th>
               <th scope="col" class="text-end">Ações</th>
             </tr>
           </thead>
@@ -27,13 +27,13 @@
               <td>{{ user.nomeCompleto }}</td>
               <td>{{ user.email }}</td>
               <td>
-                <span class="badge" [ngClass]="user.ativo ? 'bg-success' : 'bg-warning'">
-                  {{ user.ativo ? 'Ativo' : 'Inativo' }}
+                <span [ngClass]="getPerfilClass(user.perfilNome)">
+                  {{ user.perfilNome }}
                 </span>
               </td>
               <td>
-                <span *ngFor="let role of user.roles" class="me-1" [ngClass]="getRoleClass(role)">
-                  {{ role.replace('ROLE_', '') }}
+                <span class="badge" [ngClass]="user.ativo ? 'bg-success' : 'bg-warning'">
+                  {{ user.ativo ? 'Ativo' : 'Inativo' }}
                 </span>
               </td>
               <td class="text-end">

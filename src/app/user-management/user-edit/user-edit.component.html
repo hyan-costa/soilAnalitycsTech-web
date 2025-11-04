@@ -4,10 +4,10 @@
   <div class="card shadow-sm">
     <div class="card-body" *ngIf="userForm">
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-        <!-- Campo Username (Read-only) -->
+        <!-- Campo Email (Read-only) -->
         <div class="mb-3">
-          <label for="username" class="form-label">Login (não pode ser alterado)</label>
-          <input type="text" id="username" class="form-control" formControlName="username">
+          <label for="email" class="form-label">Email (não pode ser alterado)</label>
+          <input type="text" id="email" class="form-control" formControlName="email">
         </div>
 
         <!-- Campo Nome Completo -->
@@ -16,24 +16,54 @@
           <input type="text" id="nomeCompleto" class="form-control" formControlName="nomeCompleto">
         </div>
 
-        <!-- Campo Password -->
+        <!-- Campo Senha -->
         <div class="mb-3">
-          <label for="password" class="form-label">Nova Senha</label>
-          <input type="password" id="password" class="form-control" formControlName="password" placeholder="Deixe em branco para não alterar">
+          <label for="senha" class="form-label">Nova Senha</label>
+          <input type="password" id="senha" class="form-control" formControlName="senha" placeholder="Deixe em branco para não alterar">
         </div>
 
-        <!-- Campo Roles -->
+        <!-- Campo Confirmar Senha -->
         <div class="mb-3">
-          <label for="roles" class="form-label">Permissões</label>
-          <select id="roles" class="form-select" multiple formControlName="roles">
-            <option *ngFor="let role of (roles$ | async)" [value]="role.name">{{ role.name.replace('ROLE_', '') }}</option>
+          <label for="senhaConfirmacao" class="form-label">Confirmar Nova Senha</label>
+          <input type="password" id="senhaConfirmacao" class="form-control" formControlName="senhaConfirmacao"
+                 placeholder="Confirme a nova senha"
+                 [class.is-invalid]="userForm.get('senhaConfirmacao')?.invalid && (userForm.get('senhaConfirmacao')?.dirty || userForm.get('senhaConfirmacao')?.touched)">
+          <div *ngIf="userForm.get('senhaConfirmacao')?.invalid && (userForm.get('senhaConfirmacao')?.dirty || userForm.get('senhaConfirmacao')?.touched)" class="invalid-feedback">
+            <div *ngIf="userForm.get('senhaConfirmacao')?.errors?.['passwordMismatch']">As senhas não coincidem.</div>
+          </div>
+        </div>
+
+        <!-- Campo Perfil -->
+        <div class="mb-3">
+          <label for="perfilId" class="form-label">Perfil</label>
+          <select id="perfilId" class="form-select" formControlName="perfilId">
+            <option value="">Selecione um perfil</option>
+            <option *ngFor="let perfil of (perfis$ | async)" [value]="perfil.perfilId">{{ perfil.nome }}</option>
           </select>
         </div>
 
-        <!-- Campo Enabled -->
+        <!-- Campo Laboratório -->
+        <div class="mb-3">
+          <label for="laboratorioId" class="form-label">Laboratório (opcional)</label>
+          <select id="laboratorioId" class="form-select" formControlName="laboratorioId">
+            <option value="">Nenhum</option>
+            <option *ngFor="let lab of (laboratorios$ | async)" [value]="lab.laboratorioId">{{ lab.nome }}</option>
+          </select>
+        </div>
+
+        <!-- Campo Cliente -->
+        <div class="mb-3">
+          <label for="clienteId" class="form-label">Cliente (opcional)</label>
+          <select id="clienteId" class="form-select" formControlName="clienteId">
+            <option value="">Nenhum</option>
+            <option *ngFor="let cliente of (clientes$ | async)" [value]="cliente.clienteId">{{ cliente.nome }}</option>
+          </select>
+        </div>
+
+        <!-- Campo Ativo -->
         <div class="form-check form-switch mb-3">
-          <input class="form-check-input" type="checkbox" id="enabled" formControlName="enabled">
-          <label class="form-check-label" for="enabled">Usuário Ativo</label>
+          <input class="form-check-input" type="checkbox" id="ativo" formControlName="ativo">
+          <label class="form-check-label" for="ativo">Usuário Ativo</label>
         </div>
 
         <!-- Alerta de Erro -->

@@ -2,3 +2,211 @@
 
 /* Importing Bootstrap SCSS file. */
 @use "bootstrap/scss/bootstrap";
+
+// --- Variáveis Globais baseadas em Proporção Áurea ---
+$golden-ratio: 1.618;
+$base-size: 16px;
+$spacing-base: calc($base-size * $golden-ratio); // ~26px
+
+// Paleta de cores (Tema Terra/Solo)
+$primary-color: #6d4c41;
+$secondary-color: #8d6e63;
+$accent-color: #66bb6a;
+$success-color: #4caf50;
+$warning-color: #ff9800;
+$danger-color: #f44336;
+$info-color: #2196f3;
+
+// --- Tipografia ---
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: $base-size;
+  line-height: $golden-ratio;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-bottom: calc($spacing-base / $golden-ratio);
+  color: #2c2c2c;
+}
+
+h1 { font-size: calc($base-size * $golden-ratio * $golden-ratio); } // ~42px
+h2 { font-size: calc($base-size * $golden-ratio * 1.5); } // ~39px
+h3 { font-size: calc($base-size * $golden-ratio * 1.25); } // ~32px
+h4 { font-size: calc($base-size * $golden-ratio); } // ~26px
+h5 { font-size: calc($base-size * 1.125); } // ~18px
+h6 { font-size: $base-size; }
+
+// --- Cards Melhorados ---
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($secondary-color, 0.08) 100%);
+    border-bottom: 2px solid rgba($primary-color, 0.1);
+    padding: calc($spacing-base / $golden-ratio) $spacing-base;
+    font-weight: 600;
+    color: $primary-color;
+  }
+
+  .card-body {
+    padding: $spacing-base;
+  }
+}
+
+// --- Botões Melhorados ---
+.btn {
+  border-radius: 8px;
+  padding: calc($spacing-base / $golden-ratio / 1.5) calc($spacing-base / $golden-ratio);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 5%) 100%);
+
+  &:hover {
+    background: linear-gradient(135deg, darken($primary-color, 5%) 0%, darken($primary-color, 10%) 100%);
+  }
+}
+
+.btn-success {
+  background: linear-gradient(135deg, $success-color 0%, darken($success-color, 5%) 100%);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, $danger-color 0%, darken($danger-color, 5%) 100%);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, $warning-color 0%, darken($warning-color, 5%) 100%);
+  color: white;
+}
+
+.btn-info {
+  background: linear-gradient(135deg, $info-color 0%, darken($info-color, 5%) 100%);
+}
+
+// --- Tabelas Melhoradas ---
+.table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+
+  thead {
+    background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($secondary-color, 0.12) 100%);
+
+    th {
+      font-weight: 600;
+      color: $primary-color;
+      border-bottom: 2px solid rgba($primary-color, 0.2);
+      padding: calc($spacing-base / $golden-ratio) $spacing-base;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba($primary-color, 0.03);
+      }
+
+      td {
+        padding: calc($spacing-base / $golden-ratio) $spacing-base;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// --- Badges Melhorados ---
+.badge {
+  padding: calc($spacing-base / $golden-ratio / 2) calc($spacing-base / $golden-ratio);
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+// --- Forms Melhorados ---
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  padding: calc($spacing-base / $golden-ratio / 1.5) calc($spacing-base / $golden-ratio);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.15);
+  }
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: calc($spacing-base / $golden-ratio / 2);
+}
+
+// --- Alerts Melhorados ---
+.alert {
+  border-radius: 8px;
+  border: none;
+  padding: $spacing-base;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+// --- Animações suaves ---
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// --- Scrollbar Global ---
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 5px;
+
+  &:hover {
+    background: #9e9e9e;
+  }
+}

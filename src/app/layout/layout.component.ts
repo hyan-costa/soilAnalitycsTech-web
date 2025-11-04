@@ -15,11 +15,13 @@ export class LayoutComponent implements OnDestroy {
   isSidebarExpanded = false;
   isAdmin = false;
   currentUser: UserPayload | null = null;
+  nomeCompleto: string | null = null;
   private userSubscription: Subscription;
 
-  constructor(private authService: AuthService) {
+  constructor(public authService: AuthService) {
     this.userSubscription = this.authService.currentUser.subscribe(user => {
       this.currentUser = user;
+      this.nomeCompleto = this.authService.getNomeCompleto();
       this.isAdmin = this.authService.hasRole('ROLE_ADMIN');
     });
   }
@@ -30,6 +32,13 @@ export class LayoutComponent implements OnDestroy {
 
   toggleSidebar(): void {
     this.isSidebarExpanded = !this.isSidebarExpanded;
+  }
+
+  closeSidebarOnMobile(): void {
+    // Fecha a sidebar apenas em telas mobile
+    if (window.innerWidth <= 768) {
+      this.isSidebarExpanded = false;
+    }
   }
 
   logout(): void {

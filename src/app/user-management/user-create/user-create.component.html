@@ -14,38 +14,68 @@
           </div>
         </div>
 
-        <!-- Campo Username -->
+        <!-- Campo Email -->
         <div class="mb-3">
-          <label for="username" class="form-label">Login</label>
-          <input type="text" id="username" class="form-control" formControlName="username"
-                 [class.is-invalid]="username?.invalid && (username?.dirty || username?.touched)">
-          <div *ngIf="username?.invalid && (username?.dirty || username?.touched)" class="invalid-feedback">
-            <div *ngIf="username?.errors?.['required']">O nome de usuário é obrigatório.</div>
-            <div *ngIf="username?.errors?.['minlength']">O nome de usuário deve ter no mínimo 3 caracteres.</div>
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" formControlName="email"
+                 [class.is-invalid]="email?.invalid && (email?.dirty || email?.touched)">
+          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="invalid-feedback">
+            <div *ngIf="email?.errors?.['required']">O email é obrigatório.</div>
+            <div *ngIf="email?.errors?.['email']">Digite um email válido.</div>
           </div>
         </div>
 
-        <!-- Campo Password -->
+        <!-- Campo Senha -->
         <div class="mb-3">
-          <label for="password" class="form-label">Senha</label>
-          <input type="password" id="password" class="form-control" formControlName="password"
-                 [class.is-invalid]="password?.invalid && (password?.dirty || password?.touched)">
-          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="invalid-feedback">
-            <div *ngIf="password?.errors?.['required']">A senha é obrigatória.</div>
-            <div *ngIf="password?.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</div>
+          <label for="senha" class="form-label">Senha</label>
+          <input type="password" id="senha" class="form-control" formControlName="senha"
+                 [class.is-invalid]="senha?.invalid && (senha?.dirty || senha?.touched)">
+          <div *ngIf="senha?.invalid && (senha?.dirty || senha?.touched)" class="invalid-feedback">
+            <div *ngIf="senha?.errors?.['required']">A senha é obrigatória.</div>
+            <div *ngIf="senha?.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</div>
           </div>
         </div>
 
-        <!-- Campo Roles -->
+        <!-- Campo Confirmar Senha -->
         <div class="mb-3">
-          <label for="roles" class="form-label">Permissões</label>
-          <select id="roles" class="form-select" multiple formControlName="roles"
-                  [class.is-invalid]="roles?.invalid && (roles?.dirty || roles?.touched)">
-            <option *ngFor="let role of (roles$ | async)" [value]="role.name">{{ role.name.replace('ROLE_', '') }}</option>
+          <label for="senhaConfirmacao" class="form-label">Confirmar Senha</label>
+          <input type="password" id="senhaConfirmacao" class="form-control" formControlName="senhaConfirmacao"
+                 [class.is-invalid]="senhaConfirmacao?.invalid && (senhaConfirmacao?.dirty || senhaConfirmacao?.touched)">
+          <div *ngIf="senhaConfirmacao?.invalid && (senhaConfirmacao?.dirty || senhaConfirmacao?.touched)" class="invalid-feedback">
+            <div *ngIf="senhaConfirmacao?.errors?.['required']">A confirmação de senha é obrigatória.</div>
+            <div *ngIf="senhaConfirmacao?.errors?.['passwordMismatch']">As senhas não coincidem.</div>
+          </div>
+        </div>
+
+        <!-- Campo Perfil -->
+        <div class="mb-3">
+          <label for="perfilId" class="form-label">Perfil</label>
+          <select id="perfilId" class="form-select" formControlName="perfilId"
+                  [class.is-invalid]="perfilId?.invalid && (perfilId?.dirty || perfilId?.touched)">
+            <option value="">Selecione um perfil</option>
+            <option *ngFor="let perfil of (perfis$ | async)" [value]="perfil.perfilId">{{ perfil.nome }}</option>
           </select>
-          <div *ngIf="roles?.invalid && (roles?.dirty || roles?.touched)" class="invalid-feedback">
-            <div *ngIf="roles?.errors?.['required']">Selecione ao menos uma permissão.</div>
+          <div *ngIf="perfilId?.invalid && (perfilId?.dirty || perfilId?.touched)" class="invalid-feedback">
+            <div *ngIf="perfilId?.errors?.['required']">Selecione um perfil.</div>
           </div>
+        </div>
+
+        <!-- Campo Laboratório -->
+        <div class="mb-3">
+          <label for="laboratorioId" class="form-label">Laboratório (opcional)</label>
+          <select id="laboratorioId" class="form-select" formControlName="laboratorioId">
+            <option value="">Nenhum</option>
+            <option *ngFor="let lab of (laboratorios$ | async)" [value]="lab.laboratorioId">{{ lab.nome }}</option>
+          </select>
+        </div>
+
+        <!-- Campo Cliente -->
+        <div class="mb-3">
+          <label for="clienteId" class="form-label">Cliente (opcional)</label>
+          <select id="clienteId" class="form-select" formControlName="clienteId">
+            <option value="">Nenhum</option>
+            <option *ngFor="let cliente of (clientes$ | async)" [value]="cliente.clienteId">{{ cliente.nome }}</option>
+          </select>
         </div>
 
         <!-- Alerta de Erro -->

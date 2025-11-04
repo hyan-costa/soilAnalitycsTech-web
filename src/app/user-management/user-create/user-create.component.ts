@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Role, UserService } from '../../user.service';
+import { Perfil, Laboratorio, Cliente, UserService } from '../../user.service';
 import { CommonModule } from '@angular/common';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,7 +21,9 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 export class UserCreateComponent implements OnInit {
 
   userForm: FormGroup;
-  roles$!: Observable<Role[]>;
+  perfis$!: Observable<Perfil[]>;
+  laboratorios$!: Observable<Laboratorio[]>;
+  clientes$!: Observable<Cliente[]>;
   error: string | null = null;
   isLoading = false;
 
@@ -32,14 +34,37 @@ export class UserCreateComponent implements OnInit {
   ) {
     this.userForm = this.fb.group({
       nomeCompleto: ['', Validators.required],
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      roles: [[] as string[], Validators.required]
-    });
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(6)]],
+      senhaConfirmacao: ['', [Validators.required]],
+      perfilId: ['', Validators.required],
+      laboratorioId: [''],
+      clienteId: ['']
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  // Validador customizado para verificar se as senhas coincidem
+  passwordMatchValidator(formGroup: FormGroup) {
+    const senha = formGroup.get('senha')?.value;
+    const senhaConfirmacao = formGroup.get('senhaConfirmacao')?.value;
+
+    if (senha && senhaConfirmacao && senha !== senhaConfirmacao) {
+      formGroup.get('senhaConfirmacao')?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+      // Remove o erro se as senhas coincidem
+      const senhaConfirmacaoControl = formGroup.get('senhaConfirmacao');
+      if (senhaConfirmacaoControl?.hasError('passwordMismatch')) {
+        senhaConfirmacaoControl.setErrors(null);
+      }
+      return null;
+    }
   }
 
   ngOnInit(): void {
-    this.roles$ = this.userService.getRoles();
+    this.perfis$ = this.userService.getPerfis();
+    this.laboratorios$ = this.userService.getLaboratorios();
+    this.clientes$ = this.userService.getClientes();
   }
 
   onSubmit(): void {
@@ -51,7 +76,20 @@ export class UserCreateComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.userService.createUser(this.userForm.value).subscribe({
+    // Preparar payload convertendo strings vazias para null
+    const formValue = this.userForm.value;
+    const payload = {
+      nomeCompleto: formValue.nomeCompleto,
+      email: formValue.email,
+      senha: formValue.senha,
+      perfilId: formValue.perfilId,
+      laboratorioId: formValue.laboratorioId || null,
+      clienteId: formValue.clienteId || null,
+      ativo: true // Novo usuário sempre ativo por padrão
+      // senhaConfirmacao não é enviado ao backend
+    };
+
+    this.userService.createUser(payload).subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/users']);
@@ -64,7 +102,8 @@ export class UserCreateComponent implements OnInit {
     });
   }
 
-  get username() { return this.userForm.get('username'); }
-  get password() { return this.userForm.get('password'); }
-  get roles() { return this.userForm.get('roles'); }
+  get email() { return this.userForm.get('email'); }
+  get senha() { return this.userForm.get('senha'); }
+  get senhaConfirmacao() { return this.userForm.get('senhaConfirmacao'); }
+  get perfilId() { return this.userForm.get('perfilId'); }
 }

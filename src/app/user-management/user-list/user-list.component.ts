@@ -39,12 +39,8 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
-  getRoleClass(role: string): string {
-    switch (role) {
-      case 'ROLE_ADMIN': return 'badge bg-primary';
-      case 'ROLE_USER': return 'badge bg-secondary';
-      default: return 'badge bg-light text-dark';
-    }
+  getPerfilClass(perfilNome: string): string {
+    return 'badge bg-primary';
   }
 
   openDeactivationModal(content: any, user: User) {
